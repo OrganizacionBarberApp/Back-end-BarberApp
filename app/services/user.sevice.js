@@ -5,6 +5,10 @@ User.create = (newUser, result) => {
             result(err, null);
             return;
         }
-        result(null, { id: res.insertId, ...newUser });
+        result(null, newUser );
     });
 };
+
+
+
+module.exports = User
