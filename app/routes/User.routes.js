@@ -1,19 +1,32 @@
-module.exports = app => {
-    const user = require("../controllers/user.controller");
+const { Router } = require('express');
+const router = Router();
 
-    // Crear un nuevo usuario
-    app.post("/registrar", user.create);
+const { create, update, consult, consultUserId, deleteUser} = require("../controllers/user.controller");
 
-    // actualizar un usuario
-    app.put("/actualizar", user.update);
+// Crear un nuevo usuario
+// url postman : http://localhost:3000/api/usuarios/registrar
+router.post("/registrar", create);
 
-    // consultar todos los usuario
-    app.get("/consultarTodos", user.consult);
+// actualizar un usuario
+// url postman : http://localhost:3000/api/usuarios/actualizar/:id
+// url consumo front : api/usuarios/actualizar/:id
+router.put("/actualizar/:id_user", update);
 
-    // consultar un por id usuario
-    app.get("/consultarPorId/:userId", user.consultUserId);
+// consultar todos los usuario
+// url postman : http://localhost:3000/api/usuarios/consultarTodos
+// url consumo front : api/usuarios/consultarTodos
+router.get("/consultarTodos", consult);
 
-    // eliminar un por id usuario
-    app.delete("/eliminar/:userId", user.delete);
+// consultar un por id usuario
+// url postman : http://localhost:3000/api/usuarios/consultarPorId/:id_user
+// url consumo front : api/usuarios/consultarPorId/:id_user
+router.get("/consultarPorId/:id_user", consultUserId);
 
-};
+// eliminar un usuario por id 
+// url postman : http://localhost:3000/api/usuarios/eliminar/:id_user
+// url consumo front : api/usuarios/eliminar/:id_user
+router.delete("/eliminar/:id_user", deleteUser);
+
+
+
+module.exports = router

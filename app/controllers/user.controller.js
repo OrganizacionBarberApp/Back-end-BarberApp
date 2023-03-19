@@ -1,11 +1,12 @@
 const User = require('../models/User');
-const serviceUser = require('../services/user.sevice');
+const ServiceUser = require('../services/user.sevice');
 const bcrypt = require("bcryptjs");
 
 
-exports.create = (req, res) => {
+const create = async (req, res) => {
 
     var body = req.body;
+    const salt = bcrypt.genSaltSync()
 
     // Validar solicitud
     if (!body) {
@@ -14,25 +15,23 @@ exports.create = (req, res) => {
         });
     }
 
-
     // Crear un nuevo usuario
-    const User = new Usuario({
+    const user = new User({
         name: body.name,
         last_name: body.name,
         email: body.email,
-        password:   bcrypt.hashSync(body.password, 10),
+        password: bcrypt.hashSync(body.password, salt),
         url_image: body.url_image,
         google: body.google,
-        cellphone:  body.cellphone,
+        cellphone: body.cellphone,
         current: body.current,
         creation_date: body.creation_date,
         connection: body.connection,
         conexion: new Date()
     });
 
-
-    // Guardar usuario en la base de datos
-    serviceUser.create(usuario, (err, data) => {
+    // Guardar usuario en la bd
+    await ServiceUser.create(user, (err, data) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -42,9 +41,130 @@ exports.create = (req, res) => {
         } else {
             res.status(201).json({
                 ok: true,
-                usuario: usuario,
-                usuariotoke: req.usuario
+                usuario: user,
             });
         }
     });
 };
+
+const update = async (req, res) => {
+
+    let body = req.body;
+    const id_user = req.params.id_user;
+    const salt = bcrypt.genSaltSync()
+
+    const user = new User({
+        name: body.name,
+        last_name: body.name,
+        email: body.email,
+        password: bcrypt.hashSync(body.password, salt),
+        url_image: body.url_image,
+        google: body.google,
+        cellphone: body.cellphone,
+        current: body.current,
+        creation_date: body.creation_date,
+        connection: body.connection,
+        conexion: new Date()
+    });
+
+    if (!req.body) {
+        res.status(400).send({
+            mensaje: "No puede estar vacio!"
+        });
+    }
+
+    await ServiceUser.updateById(user, id_user, (err, user) => {
+        if (err) {
+            if (err) {
+                return res.status(400).send({
+                    ok: false,
+                    errors: { message: 'No existe un usuario con ese correo' }
+                });
+            }
+        }
+
+        res.status(200).json({
+            ok: true,
+            usuario: user
+        });
+
+    });
+};
+
+const consult = async (req, res) => {
+
+    await ServiceUser.consultAllUser((err, user) =>{
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error cargando los usuarios',
+                errors: err
+            });
+        } else {
+            
+            res.status(200).json({
+                ok: true,
+                usuarios: user
+            });
+        }
+    })
+}
+
+const consultUserId = async (req, res) => {
+
+    const id_user = req.params.id_user;
+
+    await ServiceUser.consultUserId( id_user, (err, user) =>{
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error cargando los usuarios',
+                errors: err
+            });
+        } else {
+            
+            res.status(200).json({
+                ok: true,
+                usuarios: user
+            });
+        }
+    })
+
+}
+
+const deleteUser = async (req, res) =>{
+
+    const id_user = req.params.id_user;
+
+    if (!id_user) {
+        res.status(400).send({
+            mensaje: "No puede estar vacio!"
+        });
+    }
+
+    await ServiceUser.deleteUser(id_user, (err, user) => {
+        if (err) {
+            if (err) {
+                return res.status(400).send({
+                    ok: false,
+                    errors: { message: 'No existe un usuario con ese correo' }
+                });
+            }
+        }
+
+        res.status(200).json({
+            ok: true,
+            usuario: "Usuario eliminado con éxito "
+        });
+
+    });
+
+}
+
+module.exports = {
+    create,
+    update,
+    consult,
+    consultUserId,
+    deleteUser
+}

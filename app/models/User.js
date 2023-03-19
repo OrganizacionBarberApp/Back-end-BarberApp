@@ -1,5 +1,5 @@
 
-const userSchema = function(user) {
+const userSchema = function (user) {
     this.id_user = user.id_user
     this.name = user.name;
     this.last_name = user.name;
@@ -13,6 +13,4 @@ const userSchema = function(user) {
     this.connection = user.connection
 }
 
-export {
-    userSchema
-}
+module.exports = userSchema
