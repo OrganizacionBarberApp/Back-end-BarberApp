@@ -3,10 +3,11 @@ const ServiceUser = require('../services/user.sevice');
 const bcrypt = require("bcryptjs");
 
 
+
 const create = async (req, res) => {
 
     var body = req.body;
-    const salt = bcrypt.genSaltSync()
+    const salt = bcrypt.genSaltSync();
 
     // Validar solicitud
     if (!body) {
@@ -76,9 +77,12 @@ const update = async (req, res) => {
     await ServiceUser.updateById(user, id_user, (err, user) => {
         if (err) {
             if (err) {
+                console.log(err)
+
                 return res.status(400).send({
                     ok: false,
-                    errors: { message: 'No existe un usuario con ese correo' }
+                    errors: { message: 'Ya existe un usuario con ese correo' },
+                    err: err
                 });
             }
         }
@@ -93,7 +97,7 @@ const update = async (req, res) => {
 
 const consult = async (req, res) => {
 
-    await ServiceUser.consultAllUser((err, user) =>{
+    await ServiceUser.consultAllUser((err, user) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -101,7 +105,7 @@ const consult = async (req, res) => {
                 errors: err
             });
         } else {
-            
+
             res.status(200).json({
                 ok: true,
                 usuarios: user
@@ -114,7 +118,7 @@ const consultUserId = async (req, res) => {
 
     const id_user = req.params.id_user;
 
-    await ServiceUser.consultUserId( id_user, (err, user) =>{
+    await ServiceUser.consultUserId(id_user, (err, user) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -122,7 +126,7 @@ const consultUserId = async (req, res) => {
                 errors: err
             });
         } else {
-            
+
             res.status(200).json({
                 ok: true,
                 usuarios: user
@@ -132,7 +136,37 @@ const consultUserId = async (req, res) => {
 
 }
 
-const deleteUser = async (req, res) =>{
+const consultUserEmail = async (req, res) => {
+
+    let email;
+
+    if (req.params) {
+        email = req.params.email;
+    } else {
+        email = req;
+    }
+
+    await ServiceUser.consultUserEmail(email, (err, user) => {
+        
+        if (err) {
+           
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'No se encontro ningún usuario con ese correo',
+                errors: err
+            });
+        }       
+        
+        res.status(200).json({
+            ok: true,
+            usuario: user
+        });
+
+    })
+
+}
+
+const deleteUser = async (req, res) => {
 
     const id_user = req.params.id_user;
 
@@ -166,5 +200,6 @@ module.exports = {
     update,
     consult,
     consultUserId,
-    deleteUser
+    deleteUser,
+    consultUserEmail
 }

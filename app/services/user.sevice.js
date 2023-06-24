@@ -1,7 +1,10 @@
 const sql = require("../models/db");
+const { promisify } = require('util');
 
 const create = (newUser, result) => {
+    
     sql.query("INSERT INTO users SET ?", newUser, (err, res) => {
+        console.log("service", res)
         if (err) {
             result(err, null);
             return;
@@ -13,11 +16,11 @@ const create = (newUser, result) => {
 const updateById = (user, id, result) => {
 
     sql.query(
-        "UPDATE users SET name = ?, last_name = ?, email = ?, password = ?, url_image = ?, google = ?, cellphone = ?, current = ?, connection = ? WHERE id_user = ? AND current = 1",
-        [user.name, user.last_name, user.email, user.password, user.url_image, user.google, user.cellphone, user.current, user.connection, id],
+        "UPDATE users SET name = ?, last_name = ?, email = ?, password = ?, url_image = ?, google = ?, cellphone = ?, current = ?, connection = ? WHERE id = ? AND current = ?",
+        [user.name, user.last_name, user.email, user.password, user.url_image, user.google, user.cellphone, user.current, user.connection, id, 1],
         (err, res) => {
             if (err) {
-                result(null, err);
+                result(err, null);
                 return;
             }
             if (res.affectedRows == 0) {
@@ -50,7 +53,7 @@ const consultAllUser = (result) => {
 const consultUserId = (id_user, result) => {
 
     sql.query(
-        "SELECT * FROM users WHERE id_user = ? AND current = ?",[id_user, 1],
+        "SELECT * FROM users WHERE id = ? AND current = ?", [id_user, 1],
         (err, res) => {
             if (err) {
                 result(null, err);
@@ -63,12 +66,32 @@ const consultUserId = (id_user, result) => {
 
 }
 
+
+
+const consultUserEmail = async (email, result) => {
+
+  sql.query(
+    "SELECT * FROM users WHERE email = ? AND current = ?",[email, 1],
+    (err, res) => {
+        if (err) {
+            result(null, err);
+            return;
+        }
+        
+        result(null, res);
+    }
+)
+
+
+};
+
+
 const deleteUser = (id_user, result) => {
 
-   let lastConnection = new Date();
+    let lastConnection = new Date();
 
     sql.query(
-        "UPDATE users SET current = ?, connection = ? WHERE id_user = ? AND current = ?",[0, lastConnection, id_user, 1],
+        "UPDATE users SET current = ?, connection = ? WHERE id = ? AND current = ?", [0, lastConnection, id_user, 1],
         (err, res) => {
             if (err) {
                 result(null, err);
@@ -90,6 +113,7 @@ module.exports = {
     updateById,
     consultAllUser,
     consultUserId,
-    deleteUser
-    
+    deleteUser,
+    consultUserEmail
+
 }

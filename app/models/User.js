@@ -1,6 +1,6 @@
 
 const userSchema = function (user) {
-    this.id_user = user.id_user
+    this.id = user.id
     this.name = user.name;
     this.last_name = user.name;
     this.email = user.email;
