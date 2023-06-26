@@ -146,7 +146,7 @@ const consultUserEmail = async (req, res) => {
         email = req;
     }
 
-    await ServiceUser.consultUserEmail(email, (err, user) => {
+    await ServiceUser.consultUserByEmail(email, (err, user) => {
         
         if (err) {
            

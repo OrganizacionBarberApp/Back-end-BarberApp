@@ -1,15 +1,17 @@
+//Importaciones de terceros
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { validateFields } = require('../middlewares/validate-fields')
 const router = Router();
 
-const { create, update, consult, consultUserId, deleteUser, consultUserEmail} = require("../controllers/user.controller");
+//Importaciones Barberapp
+const userController = require("../controllers/user.controller");
 const { emailExists } = require('../helpers/db-validator');
+const { validateFields } = require('../middlewares/validate-fields');
 
 // Crear un nuevo usuario
-// url postman : http://localhost:3000/api/usuarios/registrar
-// url consumo front : api/usuarios/registrar
-router.post("/registrar",[
+// url postman : http://localhost:3000/user/create
+// url consumo front : /user/create
+router.post("/create",[
     check('email', 'El correo no es valido').isEmail(),
     check('email').custom(emailExists),
     check('name', 'El nombre es obligatorio').not().isEmpty(),
@@ -19,12 +21,12 @@ router.post("/registrar",[
     check('connection', 'la fecha de ultima conexion es obligatorio').not().isEmpty(),
     check('password', 'La contraseña es obligatoria y mas de 8 caracteres').isLength({min:8}),
     validateFields
-], create);
+], userController.create);
 
 // actualizar un usuario
-// url postman : http://localhost:3000/api/usuarios/actualizar/:id
-// url consumo front : api/usuarios/actualizar/:id
-router.put("/actualizar/:id_user", [
+// url postman : http://localhost:3000/user/update/:id
+// url consumo front : user/update/:id
+router.put("/update/:id_user", [
     check('email', 'El correo no es valido').isEmail(),
     check('name', 'El nombre es obligatorio').not().isEmpty(),
     check('last_name', 'El apellido es obligatorio').not().isEmpty(),
@@ -33,38 +35,37 @@ router.put("/actualizar/:id_user", [
     check('connection', 'la fecha de ultima conexion es obligatorio').not().isEmpty(),
     check('password', 'La contraseña es obligatoria y mas de 8 caracteres').isLength({min:8}),
     validateFields
-], update);
+], userController.update);
 
 // consultar todos los usuario
-// url postman : http://localhost:3000/api/usuarios/consultarTodos
-// url consumo front : api/usuarios/consultarTodos
-router.get("/consultarTodos",  consult);
+// url postman : http://localhost:3000/user/consultall
+// url consumo front : /user/consultall
+router.get("/consultall",  userController.consult);
 
 // consultar un por id usuario
-// url postman : http://localhost:3000/api/usuarios/consultarPorId/:id_user
-// url consumo front : api/usuarios/consultarPorId/:id_user
-router.get("/consultarPorId/:id_user",[
+// url postman : http://localhost:3000/user/consultuser/:id_user
+// url consumo front : user/consultuser/:id_user
+router.get("/:id_user",[
     check('id_user', 'El id es obligatorio').not().isEmpty(),
     validateFields
-], consultUserId);
+], userController.consultUserId);
 
-// consultar un por id usuario
-// url postman : http://localhost:3000/api/usuarios/consultarPorEmail/:email
-// url consumo front : api/usuarios/consultarPorId/:id_user
-router.get("/consultarPorEmail/:email", [
+// consultar un usuario por email 
+// url postman : http://localhost:3000/user/consultUserByEmail/:email
+// url consumo front : user/consultUserByEmail/:email
+router.get("/:email", [
     check('email', 'El correo no es valido').isEmail(),
     validateFields
-], consultUserEmail);
+], userController.consultUserEmail);
 
 
 // eliminar un usuario por id 
-// url postman : http://localhost:3000/api/usuarios/eliminar/:id_user
-// url consumo front : api/usuarios/eliminar/:id_user
-router.delete("/eliminar/:id_user", [
+// url postman : http://localhost:3000/user/delete/:id_user
+// url consumo front : user/delete/:id_user
+router.delete("/delete/:id_user", [
     check('id_user', 'El id es obligatorio').not().isEmpty(),
     validateFields
-], deleteUser);
-
+], userController.deleteUser);
 
 
 module.exports = router

@@ -8,7 +8,8 @@ class Server {
         this.port = process.env.PORT;
 
         // Path de rutas de la appi
-        this.userPath = '/api/usuarios';
+        this.authPath = '/auth';
+        this.userPath = '/user';
 
         // Middlewares
         this.middlewares();
@@ -29,6 +30,7 @@ class Server {
 
     // rutas 
     routes() {
+        this.app.use( this.authPath, require('../routes/Auth.routes'));
         this.app.use( this.userPath, require('../routes/User.routes'));
     }
 
