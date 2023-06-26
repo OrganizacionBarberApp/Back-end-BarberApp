@@ -10,7 +10,8 @@ const userSchema = function (user) {
     this.cellphone = user.cellphone;
     this.current = user.current;
     this.creation_date = user.creation_date;
-    this.connection = user.connection
+    this.connection = user.connection;
+    this.location = user.location
 }
 
 module.exports = userSchema

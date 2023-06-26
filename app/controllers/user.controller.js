@@ -28,7 +28,7 @@ const create = async (req, res) => {
         current: body.current,
         creation_date: body.creation_date,
         connection: body.connection,
-        conexion: new Date()
+        location: body.location
     });
 
     // Guardar usuario en la bd
