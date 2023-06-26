@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 
 
 const create = async (req, res) => {
-
+    console.log("es eso");
     var body = req.body;
     const salt = bcrypt.genSaltSync();
 
