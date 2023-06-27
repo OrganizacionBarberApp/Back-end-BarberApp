@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 
 const create = async (req, res) => {
     console.log("es eso");
-    var body = req.body;
+    let body = req.body;
     const salt = bcrypt.genSaltSync();
 
     // Validar solicitud

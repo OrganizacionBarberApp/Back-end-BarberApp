@@ -9,9 +9,10 @@ const { emailExists } = require('../helpers/db-validator');
 const { validateFields } = require('../middlewares/validate-fields');
 
 // Crear un nuevo usuario
-// url postman : http://localhost:3000/user/create
+// url postman : http://localhost:3000/create
 // url consumo front : /user/create
 router.post("/create",[
+    
     check('email', 'El correo no es valido').isEmail(),
     check('email').custom(emailExists),
     check('name', 'El nombre es obligatorio').not().isEmpty(),
@@ -20,7 +21,8 @@ router.post("/create",[
     check('creation_date', 'la fecha de creacion es obligatorio').not().isEmpty(),
     check('connection', 'la fecha de ultima conexion es obligatorio').not().isEmpty(),
     check('password', 'La contraseña es obligatoria y mas de 8 caracteres').isLength({min:8}),
-    validateFields
+    validateFields,
+    
 ], userController.create);
 
 // actualizar un usuario
