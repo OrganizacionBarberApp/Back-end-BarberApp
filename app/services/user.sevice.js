@@ -52,19 +52,26 @@ const consultAllUser = (result) => {
 }
 
 
-const consultUserId = (id_user, result) => {
+const consultUserId = (id_user, current, result) => {
 
-    sql.query(
-        "SELECT * FROM users WHERE id_user = ? AND current = ?", [id_user, 1],
-        (err, res) => {
-            if (err) {
-                result(null, err);
-                return;
+    return new Promise((resolve, reject) => {
+        sql.query(
+            "SELECT * FROM users WHERE id_user = ? AND current = ?", [id_user, current],
+            (err, res) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    if (res.length > 0) {
+                        resolve(res[0]);
+                    } else {
+                        resolve(null);
+                    }
+                    
+                    resolve(null);
+                }
             }
-
-            result(null, res);
-        }
-    )
+        );
+    });
 }
 
 const deleteUser = (id_user, result) => {

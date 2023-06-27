@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const ServiceUser = require('../services/user.sevice');
+const userService = require('../services/user.sevice');
 const bcrypt = require("bcryptjs");
 
 
@@ -32,7 +32,7 @@ const create = async (req, res) => {
     });
 
     // Guardar usuario en la bd
-    await ServiceUser.create(user, (err, data) => {
+    await userService.create(user, (err, data) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -74,7 +74,7 @@ const update = async (req, res) => {
         });
     }
 
-    await ServiceUser.updateById(user, id_user, (err, user) => {
+    await userService.updateById(user, id_user, (err, user) => {
         if (err) {
             if (err) {
                 console.log(err)
@@ -97,7 +97,7 @@ const update = async (req, res) => {
 
 const consult = async (req, res) => {
 
-    await ServiceUser.consultAllUser((err, user) => {
+    await userService.consultAllUser((err, user) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -118,7 +118,7 @@ const consultUserId = async (req, res) => {
 
     const id_user = req.params.id_user;
 
-    await ServiceUser.consultUserId(id_user, (err, user) => {
+    await userService.consultUserId(id_user, (err, user) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -136,33 +136,29 @@ const consultUserId = async (req, res) => {
 
 }
 
-const consultUserEmail = async (req, res) => {
+const consultUserByEmailOrId = async (req, res) => {
 
-    let email;
+    let value = req.params.value;
 
-    if (req.params) {
-        email = req.params.email;
+    if ( !isNaN(parseInt(value) ) ) {
+
+		const user = await userService.consultUserId(value, 1);
+
+        if (user) {
+            return res.status(200).json(user);
+        }
+        return res.status(404).json({msg: 'No se encontro ningún usuario con ese id'});
+
     } else {
-        email = req;
-    }
 
-    await ServiceUser.consultUserByEmail(email, (err, user) => {
-        
-        if (err) {
-           
-            return res.status(500).json({
-                ok: false,
-                mensaje: 'No se encontro ningún usuario con ese correo',
-                errors: err
-            });
-        }       
-        
-        res.status(200).json({
-            ok: true,
-            usuario: user
-        });
+		const user = await userService.consultUserByEmail(value, 1);
 
-    })
+        if (user) {
+            return res.status(200).json(user);
+        }
+        return res.status(404).json({msg: 'No se encontro ningún usuario con ese correo'});
+
+    } 
 
 }
 
@@ -176,7 +172,7 @@ const deleteUser = async (req, res) => {
         });
     }
 
-    await ServiceUser.deleteUser(id_user, (err, user) => {
+    await userService.deleteUser(id_user, (err, user) => {
         if (err) {
             if (err) {
                 return res.status(400).send({
@@ -201,5 +197,5 @@ module.exports = {
     consult,
     consultUserId,
     deleteUser,
-    consultUserEmail
+    consultUserByEmailOrId
 }

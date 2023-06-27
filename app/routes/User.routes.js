@@ -44,21 +44,14 @@ router.put("/update/:id_user", [
 // url consumo front : /user/consultall
 router.get("/consultall",  userController.consult);
 
-// consultar un por id usuario
-// url postman : http://localhost:3000/user/consultuser/:id_user
-// url consumo front : user/consultuser/:id_user
-router.get("/:id_user",[
-    check('id_user', 'El id es obligatorio').not().isEmpty(),
-    validateFields
-], userController.consultUserId);
 
 // consultar un usuario por email 
 // url postman : http://localhost:3000/user/consultUserByEmail/:email
 // url consumo front : user/consultUserByEmail/:email
-router.get("/:email", [
-    check('email', 'El correo no es valido').isEmail(),
+router.get("/:value", [
+    check('value', 'Query value is required').not().isEmpty(),
     validateFields
-], userController.consultUserEmail);
+], userController.consultUserByEmailOrId);
 
 
 // eliminar un usuario por id 
