@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 
 
 const create = async (req, res) => {
-    console.log("es eso");
+    
     let body = req.body;
     const salt = bcrypt.genSaltSync();
 
@@ -30,7 +30,7 @@ const create = async (req, res) => {
         connection: body.connection,
         location: body.location
     });
-
+    
     // Guardar usuario en la bd
     await userService.create(user, (err, data) => {
         if (err) {
@@ -56,7 +56,7 @@ const update = async (req, res) => {
 
     const user = new User({
         name: body.name,
-        last_name: body.name,
+        last_name: body.last_name,
         email: body.email,
         password: bcrypt.hashSync(body.password, salt),
         url_image: body.url_image,
@@ -77,7 +77,6 @@ const update = async (req, res) => {
     await userService.updateById(user, id_user, (err, user) => {
         if (err) {
             if (err) {
-                console.log(err)
 
                 return res.status(400).send({
                     ok: false,
@@ -112,28 +111,6 @@ const consult = async (req, res) => {
             });
         }
     })
-}
-
-const consultUserId = async (req, res) => {
-
-    const id_user = req.params.id_user;
-
-    await userService.consultUserId(id_user, (err, user) => {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                mensaje: 'Error cargando los usuarios',
-                errors: err
-            });
-        } else {
-
-            res.status(200).json({
-                ok: true,
-                usuarios: user
-            });
-        }
-    })
-
 }
 
 const consultUserByEmailOrId = async (req, res) => {
@@ -195,7 +172,6 @@ module.exports = {
     create,
     update,
     consult,
-    consultUserId,
     deleteUser,
     consultUserByEmailOrId
 }

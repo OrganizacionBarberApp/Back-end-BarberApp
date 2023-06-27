@@ -5,8 +5,8 @@ const router = Router();
 
 //Importaciones Barberapp
 const userController = require("../controllers/user.controller");
-const { emailExists } = require('../helpers/db-validator');
 const { validateFields } = require('../middlewares/validate-fields');
+const validateUser = require('../middlewares/validate-user');
 
 // Crear un nuevo usuario
 // url postman : http://localhost:3000/create
@@ -14,7 +14,7 @@ const { validateFields } = require('../middlewares/validate-fields');
 router.post("/create",[
     
     check('email', 'El correo no es valido').isEmail(),
-    check('email').custom(emailExists),
+    check('email').custom(validateUser.consultUserEmail),
     check('name', 'El nombre es obligatorio').not().isEmpty(),
     check('last_name', 'El apellido es obligatorio').not().isEmpty(),
     check('cellphone', 'El telefono es obligatorio').not().isEmpty(),
@@ -45,7 +45,7 @@ router.put("/update/:id_user", [
 router.get("/consultall",  userController.consult);
 
 
-// consultar un usuario por email 
+// consultar un usuario por email o id
 // url postman : http://localhost:3000/user/consultUserByEmail/:email
 // url consumo front : user/consultUserByEmail/:email
 router.get("/:value", [

@@ -3,9 +3,9 @@ const { promisify } = require('util');
 
 
 const create = (newUser, result) => {
-    console.log("no es eso");
+    
     sql.query("INSERT INTO users SET ?", newUser, (err, res) => {
-        console.log("service", res)
+        
         if (err) {
             result(err, null);
             return;
