@@ -16,7 +16,7 @@ const consultUserEmail = async (req, res) => {
 
             return res.status(500).json({
                 ok: false,
-                mensaje: 'No se encontro ningún usuario con ese correo',
+                mensaje: 'No user found with that email',
                 errors: err
             });
         }       

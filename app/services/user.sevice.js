@@ -26,7 +26,7 @@ const updateById = (user, id, result) => {
                 return;
             }
             if (res.affectedRows == 0) {
-                result({ kind: "No_Encontrado" }, null);
+                result({ kind: "Not found" }, null);
                 return;
             }
             result(null, { usuario: user });
@@ -86,7 +86,7 @@ const deleteUser = (id_user, result) => {
                 return;
             }
             if (res.affectedRows == 0) {
-                result({ kind: "No_Encontrado" }, null);
+                result({ kind: "Not found" }, null); 
                 return;
             }
             result(null, { usuario: res });
