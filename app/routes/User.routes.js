@@ -36,6 +36,7 @@ router.put("/update/:id_user", [
     check('creation_date', 'the creation date is required').not().isEmpty(),
     check('connection', 'the last connection date is required').not().isEmpty(),
     check('password', 'The password is mandatory and more than 8 characters').isLength({min:8}),
+    check('id_user', 'The id is required').notEmpty().isNumeric(),
     validateFields
 ], userController.update);
 
@@ -46,10 +47,11 @@ router.get("/consultall",  userController.consult);
 
 
 // consultar un usuario por email o id
-// url postman : http://localhost:3000/user/consultUserByEmail/:email
-// url consumo front : user/consultUserByEmail/:email
+// url postman : http://localhost:3000/user/:value
+// url consumo front : user/:value
 router.get("/:value", [
     check('value', 'Query value is required').not().isEmpty(),
+    check('value', 'Query value is required').notEmpty().isNumeric(),
     validateFields
 ], userController.consultUserByEmailOrId);
 
@@ -59,6 +61,7 @@ router.get("/:value", [
 // url consumo front : user/delete/:id_user
 router.delete("/delete/:id_user", [
     check('id_user', 'The id is required').not().isEmpty(),
+    check('id_user', 'The id is required').notEmpty().isNumeric(),
     validateFields
 ], userController.deleteUser);
 
