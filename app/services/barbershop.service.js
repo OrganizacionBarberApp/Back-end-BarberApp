@@ -10,7 +10,7 @@ const create = (newBarbershop, result) => {
             result(err, null);
             return;
         }
-        result(null, newbarbershop);
+        result(null, newBarbershop);
     });
 };
 

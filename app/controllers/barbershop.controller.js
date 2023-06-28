@@ -13,22 +13,22 @@ const create = async (req, res) => {
             mensaje: "Content cannot be empty"
         });
     }
-
+    
     // Crear un nuevo usuario
     const barbershop = new Barbershop({
-        id_barbershop : body.barbershop.id_barbershop,
-        id_barbershop : body.barbershop.id_barbershop,
-        name : body.barbershop.name,
-        cellphone : body.barbershop.cellphone,
-        descrition : body.barbershop.descrition,
-        location : body.barbershop.location,
-        url_image : body.barbershop.url_image,
-        qualification : body.barbershop.qualification,
-        current : body.barbershop.current,
-        creation_date : body.barbershop.creation_date,
-        connection : body.barbershop.connection
+        id_barbershop : body.id_barbershop,
+        id_user : body.id_user,
+        name : body.name,
+        cellphone : body.cellphone,
+        descrition : body.descrition,
+        location : body.location,
+        url_image : body.url_image,
+        qualification : body.qualification,
+        current : body.current,
+        creation_date : body.creation_date,
+        connection : body.connection
     });
-
+    
     // Guardar usuario en la bd
     await barbershopService.create(barbershop, (err, data) => {
         if (err) {
@@ -52,17 +52,17 @@ const update = async (req, res) => {
     const id_barbershop = req.params.id_barbershop;
     
     const barbershop = new Barbershop({
-        id_barbershop : body.barbershop.id_barbershop,
-        id_barbershop : body.barbershop.id_barbershop,
-        name : body.barbershop.name,
-        cellphone : body.barbershop.cellphone,
-        descrition : body.barbershop.descrition,
-        location : body.barbershop.location,
-        url_image : body.barbershop.url_image,
-        qualification : body.barbershop.qualification,
-        current : body.barbershop.current,
-        creation_date : body.barbershop.creation_date,
-        connection : body.barbershop.connection
+        id_barbershop : body.id_barbershop,
+        id_barbershop : body.id_barbershop,
+        name : body.name,
+        cellphone : body.cellphone,
+        descrition : body.descrition,
+        location : body.location,
+        url_image : body.url_image,
+        qualification : body.qualification,
+        current : body.current,
+        creation_date : body.creation_date,
+        connection : body.connection
     });
 
     if (!req.body) {
