@@ -2,14 +2,6 @@ const ServiceUser = require("../services/user.sevice")
 
 const consultUserEmail = async (req, res) => {
 
-    let email;
-
-    if (req.params) {
-        email = req.params.email;
-    } else {
-        email = req;
-    }
-
     await ServiceUser.consultUserByEmail(email, 1, (err, user) => {
 
         if (err) {
@@ -31,5 +23,5 @@ const consultUserEmail = async (req, res) => {
 }
 
 module.exports = {
-    consultUserEmail,
+    
 }

@@ -13,14 +13,14 @@ const validateUser = require('../middlewares/validate-user');
 // url consumo front : /user/create
 router.post("/create",[
     
-    check('email', 'El correo no es valido').isEmail(),
+    check('email', 'The email is not valid').isEmail(),
     check('email').custom(validateUser.consultUserEmail),
-    check('name', 'El nombre es obligatorio').not().isEmpty(),
-    check('last_name', 'El apellido es obligatorio').not().isEmpty(),
-    check('cellphone', 'El telefono es obligatorio').not().isEmpty(),
-    check('creation_date', 'la fecha de creacion es obligatorio').not().isEmpty(),
-    check('connection', 'la fecha de ultima conexion es obligatorio').not().isEmpty(),
-    check('password', 'La contraseña es obligatoria y mas de 8 caracteres').isLength({min:8}),
+    check('name', 'name is required').not().isEmpty(),
+    check('last_name', 'last name is required').not().isEmpty(),
+    check('cellphone', 'The phone is required').not().isEmpty(),
+    check('creation_date', 'the creation date is required').not().isEmpty(),
+    check('connection', 'the last connection date is required').not().isEmpty(),
+    check('password', 'The password is mandatory and more than 8 characters').isLength({min:8}),
     validateFields,
     
 ], userController.create);
@@ -29,13 +29,14 @@ router.post("/create",[
 // url postman : http://localhost:3000/user/update/:id
 // url consumo front : user/update/:id
 router.put("/update/:id_user", [
-    check('email', 'El correo no es valido').isEmail(),
-    check('name', 'El nombre es obligatorio').not().isEmpty(),
-    check('last_name', 'El apellido es obligatorio').not().isEmpty(),
-    check('cellphone', 'El telefono es obligatorio').not().isEmpty(),
-    check('creation_date', 'la fecha de creacion es obligatorio').not().isEmpty(),
-    check('connection', 'la fecha de ultima conexion es obligatorio').not().isEmpty(),
-    check('password', 'La contraseña es obligatoria y mas de 8 caracteres').isLength({min:8}),
+    check('email', 'The email is not valid').isEmail(),
+    check('name', 'name is required').not().isEmpty(),
+    check('last_name', 'last name is required').not().isEmpty(),
+    check('cellphone', 'The phone is required').not().isEmpty(),
+    check('creation_date', 'the creation date is required').not().isEmpty(),
+    check('connection', 'the last connection date is required').not().isEmpty(),
+    check('password', 'The password is mandatory and more than 8 characters').isLength({min:8}),
+    check('id_user', 'The id is required').notEmpty().isNumeric(),
     validateFields
 ], userController.update);
 
@@ -46,10 +47,11 @@ router.get("/consultall",  userController.consult);
 
 
 // consultar un usuario por email o id
-// url postman : http://localhost:3000/user/consultUserByEmail/:email
-// url consumo front : user/consultUserByEmail/:email
+// url postman : http://localhost:3000/user/:value
+// url consumo front : user/:value
 router.get("/:value", [
     check('value', 'Query value is required').not().isEmpty(),
+    check('value', 'Query value is required').notEmpty().isNumeric(),
     validateFields
 ], userController.consultUserByEmailOrId);
 
@@ -58,7 +60,8 @@ router.get("/:value", [
 // url postman : http://localhost:3000/user/delete/:id_user
 // url consumo front : user/delete/:id_user
 router.delete("/delete/:id_user", [
-    check('id_user', 'El id es obligatorio').not().isEmpty(),
+    check('id_user', 'The id is required').not().isEmpty(),
+    check('id_user', 'The id is required').notEmpty().isNumeric(),
     validateFields
 ], userController.deleteUser);
 

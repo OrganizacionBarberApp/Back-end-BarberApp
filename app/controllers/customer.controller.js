@@ -1,13 +1,11 @@
-const User = require('../models/User');
-const userService = require('../services/user.sevice');
-const bcrypt = require("bcryptjs");
+const Customer = require('../models/Customer');
+const customerService = require('../services/customer.service');
 
 
 
 const create = async (req, res) => {
 
     let body = req.body;
-    const salt = bcrypt.genSaltSync();
 
     // Validar solicitud
     if (!body) {
@@ -17,22 +15,22 @@ const create = async (req, res) => {
     }
 
     // Crear un nuevo usuario
-    const user = new User({
+    const customer = new Customer({
         name: body.name,
+        id_user: body.id_user,
         last_name: body.name,
         email: body.email,
-        password: bcrypt.hashSync(body.password, salt),
         url_image: body.url_image,
+        city: body.city,
         google: body.google,
         cellphone: body.cellphone,
         current: body.current,
-        creation_date: body.creation_date,
-        connection: body.connection,
-        location: body.location
+        creation_date: new Date(),
+        connection: new Date(),
     });
 
     // Guardar usuario en la bd
-    await userService.create(user, (err, data) => {
+    await customerService.create(customer, (err, data) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -42,7 +40,7 @@ const create = async (req, res) => {
         } else {
             res.status(201).json({
                 ok: true,
-                usuario: user,
+                usuario: customer,
             });
         }
     });
@@ -51,21 +49,20 @@ const create = async (req, res) => {
 const update = async (req, res) => {
 
     let body = req.body;
-    const id_user = req.params.id_user;
-    const salt = bcrypt.genSaltSync()
+    const id_customer = req.params.id_customer;
 
-    const user = new User({
+    const customer = new Customer({
         name: body.name,
-        last_name: body.last_name,
+        id_user: body.id_user,
+        last_name: body.name,
         email: body.email,
-        password: bcrypt.hashSync(body.password, salt),
         url_image: body.url_image,
+        city: body.city,
         google: body.google,
         cellphone: body.cellphone,
         current: body.current,
-        creation_date: body.creation_date,
-        connection: body.connection,
-        conexion: new Date()
+        creation_date: new Date(),
+        connection: new Date(),
     });
 
     if (!req.body) {
@@ -74,13 +71,13 @@ const update = async (req, res) => {
         });
     }
 
-    await userService.updateById(user, id_user, (err, user) => {
+    await customerService.updateById(customer, id_customer, (err, customer) => {
         if (err) {
             if (err) {
 
                 return res.status(400).send({
                     ok: false,
-                    errors: { message: 'There is already a user with that email' },
+                    errors: { message: 'There is already a customer with that email' },
                     err: err
                 });
             }
@@ -88,7 +85,7 @@ const update = async (req, res) => {
 
         res.status(200).json({
             ok: true,
-            usuario: user
+            usuario: customer
         });
 
     });
@@ -96,72 +93,72 @@ const update = async (req, res) => {
 
 const consult = async (req, res) => {
 
-    await userService.consultAllUser((err, user) => {
+    await customerService.consultAllCustomer((err, customer) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error loading users',
+                mensaje: 'Error loading customers',
                 errors: err
             });
         } else {
 
             res.status(200).json({
                 ok: true,
-                usuarios: user
+                usuarios: customer
             });
         }
     })
 }
 
-const consultUserByEmailOrId = async (req, res) => {
+const consultCustomerByEmailOrId = async (req, res) => {
 
     let value = req.params.value;
 
     if (!isNaN(parseInt(value))) {
 
-        const user = await userService.consultUserId(value, 1);
+        const customer = await customerService.consultCustomerId(value, 1);
 
-        if (user) {
-            return res.status(200).json(user);
+        if (customer) {
+            return res.status(200).json(customer);
         }
-        return res.status(404).json({ msg: 'No user found with that id' });
+        return res.status(404).json({ msg: 'No customer found with that id' });
 
     } else {
 
-        const user = await userService.consultUserByEmail(value, 1);
+        const customer = await customerService.consultCustomerByEmail(value, 1);
 
-        if (user) {
-            return res.status(200).json(user);
+        if (customer) {
+            return res.status(200).json(customer);
         }
-        return res.status(404).json({ msg: 'No user found with that email' });
+        return res.status(404).json({ msg: 'No customer found with that email' });
 
     }
 
 }
 
-const deleteUser = async (req, res) => {
+const deleteCustomer = async (req, res) => {
 
-    const id_user = req.params.id_user;
+    const id_customer = req.params.id_customer;
 
-    if (!id_user) {
+    if (!id_customer) {
         res.status(400).send({
             mensaje: "It cant be empty!"
         });
     }
 
-    await userService.deleteUser(id_user, (err, user) => {
+    await customerService.deleteCustomer(id_customer, (err, customer) => {
         if (err) {
             if (err) {
                 return res.status(400).send({
                     ok: false,
-                    errors: { message: 'There is no user with that email' }
+                    errors: { message: 'There is no customer with that email' }
                 });
             }
         }
 
         res.status(200).json({
             ok: true,
-            usuario: "User deleted successfully"
+            usuario: "customer deleted successfully"
         });
 
     });
@@ -172,6 +169,6 @@ module.exports = {
     create,
     update,
     consult,
-    deleteUser,
-    consultUserByEmailOrId
+    deleteCustomer,
+    consultCustomerByEmailOrId
 }

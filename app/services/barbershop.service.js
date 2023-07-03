@@ -2,24 +2,24 @@ const sql = require("../models/db");
 const { promisify } = require('util');
 
 
-const create = (newcustomer, result) => {
+const create = (newBarbershop, result) => {
     
-    sql.query("INSERT INTO customers SET ?", newcustomer, (err, res) => {
+    sql.query("INSERT INTO barbershops SET ?", newBarbershop, (err, res) => {
         
         if (err) {
             result(err, null);
             return;
         }
-        result(null, newcustomer);
+        result(null, newBarbershop);
     });
 };
 
 
-const updateById = (customer, id, result) => {
+const updateById = (barbershop, id, result) => {
 
     sql.query(
-        "UPDATE customers SET name = ?, last_name = ?, email = ?, password = ?, url_image = ?, city = ?, google = ?, cellphone = ?, current = ?, connection = ? WHERE id_customer = ? AND current = ?",
-        [customer.name, customer.last_name, customer.email, customer.password, customer.url_image, customer.city, customer.google, customer.cellphone, customer.current, customer.connection, id, 1],
+        "UPDATE barbershops SET name = ?, cellphone = ?, descrition = ?, location = ?, url_image = ?, qualification = ?, current = ?, creation_date = ?, connection = ? WHERE id_barbershop = ? AND current = ?",
+        [barbershop.name, barbershop.cellphone, barbershop.descrition, barbershop.location, barbershop.url_image, barbershop.qualification, barbershop.current, barbershop.creation_date, barbershop.connection, id, 1],
         (err, res) => {
             if (err) {
                 result(err, null);
@@ -29,17 +29,17 @@ const updateById = (customer, id, result) => {
                 result({ kind: "Not found" }, null);
                 return;
             }
-            result(null, { usuario: customer });
+            result(null, { barbershop: barbershop });
         }
     );
 
 }
 
 
-const consultAllcustomer = (result) => {
+const consultAllBarbershop = (result) => {
 
     sql.query(
-        "SELECT * FROM customers WHERE current = 1;",
+        "SELECT * FROM barbershops WHERE current = 1;",
         (err, res) => {
             if (err) {
                 result(null, err);
@@ -52,11 +52,11 @@ const consultAllcustomer = (result) => {
 }
 
 
-const consultcustomerId = (id_customer, current, result) => {
+const consultBarbershopId = (id_barbershop, current, result) => {
 
     return new Promise((resolve, reject) => {
         sql.query(
-            "SELECT * FROM customers WHERE id_customer = ? AND current = ?", [id_customer, current],
+            "SELECT * FROM barbershops WHERE id_barbershop = ? AND current = ?", [id_barbershop, current],
             (err, res) => {
                 if (err) {
                     reject(err);
@@ -74,12 +74,12 @@ const consultcustomerId = (id_customer, current, result) => {
     });
 }
 
-const deletecustomer = (id_customer, result) => {
+const deleteBarbershop = (id_barbershop, result) => {
 
     let lastConnection = new Date();
 
     sql.query(
-        "UPDATE customers SET current = ?, connection = ? WHERE id_customer = ? AND current = ?", [0, lastConnection, id_customer, 1],
+        "UPDATE barbershops SET current = ?, connection = ? WHERE id_barbershop = ? AND current = ?", [0, lastConnection, id_barbershop, 1],
         (err, res) => {
             if (err) {
                 result(null, err);
@@ -89,16 +89,16 @@ const deletecustomer = (id_customer, result) => {
                 result({ kind: "Not found" }, null); 
                 return;
             }
-            result(null, { usuario: res });
+            result(null, { barbershop: res });
         }
     );
 }
 
 
-const consultcustomerByEmail = async (email, current) => {
+const consultbarbershopByEmail = async (email, current) => {
     return new Promise((resolve, reject) => {
         sql.query(
-            "SELECT * FROM customers WHERE email = ? AND current = ?", [email, current],
+            "SELECT * FROM barbershops WHERE email = ? AND current = ?", [email, current],
             (err, res) => {
                 if (err) {
                     reject(err);
@@ -121,8 +121,8 @@ const consultcustomerByEmail = async (email, current) => {
 module.exports = {
     create,
     updateById,
-    consultAllcustomer,
-    consultcustomerId,
-    deletecustomer,
-    consultcustomerByEmail
+    consultAllBarbershop,
+    consultBarbershopId,
+    deleteBarbershop,
+    consultbarbershopByEmail
 }

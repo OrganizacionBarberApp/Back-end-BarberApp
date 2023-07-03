@@ -2,24 +2,23 @@ const sql = require("../models/db");
 const { promisify } = require('util');
 
 
-const create = (newcustomer, result) => {
+const create = (newCustomer, result) => {
     
-    sql.query("INSERT INTO customers SET ?", newcustomer, (err, res) => {
+    sql.query("INSERT INTO customers SET ?", newCustomer, (err, res) => {
         
         if (err) {
             result(err, null);
             return;
         }
-        result(null, newcustomer);
+        result(null, newCustomer);
     });
 };
-
 
 const updateById = (customer, id, result) => {
 
     sql.query(
-        "UPDATE customers SET name = ?, last_name = ?, email = ?, password = ?, url_image = ?, city = ?, google = ?, cellphone = ?, current = ?, connection = ? WHERE id_customer = ? AND current = ?",
-        [customer.name, customer.last_name, customer.email, customer.password, customer.url_image, customer.city, customer.google, customer.cellphone, customer.current, customer.connection, id, 1],
+        "UPDATE customers SET name = ?, last_name = ?, email = ?, url_image = ?, google = ?, cellphone = ?, current = ?, connection = ? WHERE id_customer = ? AND current = ?",
+        [customer.name, customer.last_name, customer.email, customer.url_image, customer.google, customer.cellphone, customer.current, customer.connection, id, 1],
         (err, res) => {
             if (err) {
                 result(err, null);
@@ -35,8 +34,7 @@ const updateById = (customer, id, result) => {
 
 }
 
-
-const consultAllcustomer = (result) => {
+const consultAllCustomer = (result) => {
 
     sql.query(
         "SELECT * FROM customers WHERE current = 1;",
@@ -51,8 +49,7 @@ const consultAllcustomer = (result) => {
     )
 }
 
-
-const consultcustomerId = (id_customer, current, result) => {
+const consultCustomerId = (id_customer, current, result) => {
 
     return new Promise((resolve, reject) => {
         sql.query(
@@ -74,7 +71,7 @@ const consultcustomerId = (id_customer, current, result) => {
     });
 }
 
-const deletecustomer = (id_customer, result) => {
+const deleteCustomer = (id_customer, result) => {
 
     let lastConnection = new Date();
 
@@ -94,8 +91,7 @@ const deletecustomer = (id_customer, result) => {
     );
 }
 
-
-const consultcustomerByEmail = async (email, current) => {
+const consultCustomerByEmail = async (email, current) => {
     return new Promise((resolve, reject) => {
         sql.query(
             "SELECT * FROM customers WHERE email = ? AND current = ?", [email, current],
@@ -121,8 +117,8 @@ const consultcustomerByEmail = async (email, current) => {
 module.exports = {
     create,
     updateById,
-    consultAllcustomer,
-    consultcustomerId,
-    deletecustomer,
-    consultcustomerByEmail
+    consultAllCustomer,
+    consultCustomerId,
+    deleteCustomer,
+    consultCustomerByEmail
 }

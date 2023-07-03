@@ -34,7 +34,7 @@ const login = async (req, res = response) => {
 
 	} catch (error) {
 		console.error(error);
-		return res.status(500).json({ mensaje: 'Error al obtener el usuario' });
+		return res.status(500).json({ mensaje: 'Error getting user' });
 	}
 
 }
