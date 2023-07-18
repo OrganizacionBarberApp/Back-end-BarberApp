@@ -17,9 +17,9 @@ const create = async (req, res) => {
     const publication = new Publication({
         name: body.name,
         id_user: body.id_user,
-        description: body.name,
-        url_image: body.email,
-        role: body.url_image,
+        description: body.description,
+        url_image: body.url_image,
+        role: body.role,
         publication_date: new Date(),
     });
 
@@ -48,10 +48,9 @@ const update = async (req, res) => {
     const publication = new Publication({
         name: body.name,
         id_user: body.id_user,
-        description: body.name,
-        url_image: body.email,
-        role: body.url_image,
-        publication_date: new Date(),
+        description: body.description,
+        url_image: body.url_image,
+        role: body.role,
     });
 
     if (!req.body) {
@@ -81,8 +80,9 @@ const update = async (req, res) => {
 };
 
 const consult = async (req, res) => {
+    let id = parseInt(req.params.id_user);
 
-    await publicationService.consultAllPublication((err, publication) => {
+    await publicationService.consultAllPublication(id, (err, publication) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -101,7 +101,8 @@ const consult = async (req, res) => {
 
 const deletePublication = async (req, res) => {
 
-    const id_publication = req.params.id_publication;
+    const id_publication = parseInt(req.params.id_publication);
+    const id_user = parseInt(req.body.id_user);
 
     if (!id_publication) {
         res.status(400).send({
@@ -109,7 +110,7 @@ const deletePublication = async (req, res) => {
         });
     }
 
-    await publicationService.deletePublication(id_publication, (err, publication) => {
+    await publicationService.deletePublication(id_publication, id_user, (err, publication) => {
         if (err) {
             if (err) {
                 return res.status(400).send({

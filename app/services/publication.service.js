@@ -28,25 +28,28 @@ const updateById = (publication, id_publication, result) => {
                 result({ kind: "Not found" }, null);
                 return;
             }
-            result(null, { usuario: publication });
+            result(null, { publicacion: publication });
         }
     );
 
 }
 
 const consultAllPublication = (id_user, result) => {
+    
+    return new Promise((resolve, reject) => {
 
-    sql.query(
-        "SELECT * FROM publications WHERE id_user = ?;",[id_user],
-        (err, res) => {
-            if (err) {
-                result(null, err);
-                return;
+        sql.query(
+            "SELECT * FROM publications WHERE id_user = ?;", [id_user],
+            (err, res) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    
+                    result(null, res);
+                }
             }
-
-            result(null, res);
-        }
-    )
+        );
+    });
 }
 
 

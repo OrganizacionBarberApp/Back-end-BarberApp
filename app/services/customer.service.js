@@ -49,7 +49,7 @@ const consultAllCustomer = (result) => {
     )
 }
 
-const consultCustomerId = (id_customer, current, result) => {
+const consultCustomerId = (id_customer, current) => {
 
     return new Promise((resolve, reject) => {
         sql.query(

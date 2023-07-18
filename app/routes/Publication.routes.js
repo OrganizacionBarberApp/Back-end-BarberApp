@@ -35,7 +35,10 @@ router.put("/update/:id_publication", [
 // consultar todos los publicaciones
 // url postman : http://localhost:3000/publication/consultall
 // url consumo front : /publication/consultall
-router.get("/consultall",  publicationController.consult);
+router.get("/consultall/:id_user", [
+    check('id_user', 'The id is required').not().isEmpty(),
+    validateFields
+],  publicationController.consult);
 
 
 // eliminar un publicaciones por id 
