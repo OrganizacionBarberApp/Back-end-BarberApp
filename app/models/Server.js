@@ -13,6 +13,7 @@ class Server {
         this.barbershopPath = '/barbershop';
         this.customerPath = '/customer';
         this.publicationPath = '/publication';
+        this.promotionPath = '/promotion';
 
         // Middlewares
         this.middlewares();
@@ -38,6 +39,7 @@ class Server {
         this.app.use( this.barbershopPath, require('../routes/Barbershop.routes'));
         this.app.use( this.customerPath, require('../routes/Customer.routes')); 
         this.app.use( this.publicationPath, require('../routes/Publication.routes')); 
+        this.app.use( this.promotionPath, require('../routes/Promotion.routes'));
     }
 
     listen() {
